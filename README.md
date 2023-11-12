@@ -111,7 +111,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/department_db
 spring.datasource.username=root
 spring.datasource.password=Mysql@123
 
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=update
 ```
 这里注意修改的MySQL密码，另外在 MySQL 中创建一个名为Department_db的数据库 。
@@ -328,7 +328,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/employee_db
 spring.datasource.username=root
 spring.datasource.password=Mysql@123
 
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=update
 ```
 这里注意修改的MySQL密码，另外在 MySQL 中创建一个名为employee_db的数据库 。
@@ -590,5 +590,7 @@ $ mvn spring-boot:run
 
 从 5.0 开始，  RestTemplate 类处于维护模式，很快就会被弃用。因此 Spring 团队推荐使用 `org.springframework.web.reactive.client.WebClient` ，它具有现代 API 并支持同步、异步和流场景,下一篇文章继续讲解
 
-
+## 欢迎关注我的公众号
+有更多内容带跟您
+![img_1.png](img_1.png)
 
