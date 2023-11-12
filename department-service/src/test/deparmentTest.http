@@ -1,0 +1,12 @@
+###保存部门rest api
+POST http://localhost:8080/api/departments
+Content-Type: application/json
+
+{
+  "departmentName": "IT",
+  "departmentAddress": "Pune",
+  "departmentCode": "IT001"
+}
+
+###获取单个部门 REST API：
+GET http://localhost:8080/api/departments/1

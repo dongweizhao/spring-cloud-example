@@ -1,0 +1,12 @@
+###保存用户 REST API：
+POST http://localhost:8081/api/users
+Content-Type: application/json
+
+{
+  "firstName": "Ramesh",
+  "lastName": "Fadatare",
+  "email": "remesh@gmail.com",
+  "departmentId": "1"
+}
+###获取用户 REST API：
+GET http://localhost:8081/api/users/1
