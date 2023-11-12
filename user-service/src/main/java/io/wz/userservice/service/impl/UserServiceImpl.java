@@ -1,22 +1,21 @@
 package io.wz.userservice.service.impl;
 
-import lombok.AllArgsConstructor;
 import io.wz.userservice.dto.DepartmentDto;
 import io.wz.userservice.dto.ResponseDto;
 import io.wz.userservice.dto.UserDto;
 import io.wz.userservice.entity.User;
 import io.wz.userservice.repository.UserRepository;
 import io.wz.userservice.service.UserService;
-import org.springframework.http.ResponseEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private RestTemplate restTemplate;
+    private WebClient webClient;
 
     @Override
     public User saveUser(User user) {
@@ -30,14 +29,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).get();
         UserDto userDto = mapToUser(user);
 
-        ResponseEntity<DepartmentDto> responseEntity = restTemplate
-                .getForEntity("http://localhost:8080/api/departments/" + user.getDepartmentId(),
-                DepartmentDto.class);
-
-        DepartmentDto departmentDto = responseEntity.getBody();
-
-        System.out.println(responseEntity.getStatusCode());
-
+        DepartmentDto departmentDto = webClient.get()
+                .uri("http://localhost:8080/api/departments/" + user.getDepartmentId())
+                .retrieve()
+                .bodyToMono(DepartmentDto.class)
+                .block();
         responseDto.setUser(userDto);
         responseDto.setDepartment(departmentDto);
 
