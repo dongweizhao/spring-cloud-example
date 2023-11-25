@@ -1,21 +1,4 @@
-#### 目的
-Spring Cloud 线上微服务实例都是2个起步，如果出问题后，在没有ELK等日志分析平台，如何确定调用到了目标服务的那个实例，以此来排查问题
-
-![](https://files.mdnice.com/user/35072/a5c40ce9-d1cf-4d74-ad6b-c308f477d5a5.png)
-
-
-#### 技术栈
-- Spring Cloud: Hoxton.SR6
-- Spring Boot: 2.3.1.RELEASE
-- Spring-Cloud-Openfeign: 2.2.3.RELEASE(spring cloud依赖内置，不用指定版本)
-#### 效果
-可以看到服务有几个实例是上线，并且最终调用了那个实例
-
-![](https://files.mdnice.com/user/35072/f88a239c-366b-4ab0-9bc2-650366e3d1db.png)
-
-### 实现方案
-#### 1. 继承RoundRobinRule，并重写`choose`方法
-``` java
+package io.wz.userservice.config;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.loadbalancer.ILoadBalancer;
@@ -85,25 +68,3 @@ public class FeignRule extends RoundRobinRule {
         return chooseServer;
     }
 }
-```
-#### 2.修改RibbonClients配置
-``` java
-import org.springframework.cloud.netflix.ribbon.RibbonClients;
-import org.springframework.context.annotation.Configuration;
-/**
- * @description:feign 配置
- */
-@Configuration
-@RibbonClients(defaultConfiguration = {FeignRule.class})
-public class FeignConfig {
-}
-```
-
-以上两部完成大功告成！
-
-源码下载：
-
-
-## 欢迎关注我的公众号
-有更多内容带给您
-![img_1.png](img_1.png)
