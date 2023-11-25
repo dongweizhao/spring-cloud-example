@@ -1,21 +1,22 @@
-#### 目的
-Spring Cloud 线上微服务实例都是2个起步，如果出问题后，在没有ELK等日志分析平台，如何确定调用到了目标服务的那个实例，以此来排查问题
+package io.wz.userservice.config;
 
-![](https://files.mdnice.com/user/35072/a5c40ce9-d1cf-4d74-ad6b-c308f477d5a5.png)
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.loadbalancer.DefaultResponse;
+import org.springframework.cloud.client.loadbalancer.EmptyResponse;
+import org.springframework.cloud.client.loadbalancer.Request;
+import org.springframework.cloud.client.loadbalancer.Response;
+import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
+import org.springframework.cloud.loadbalancer.core.SelectedInstanceCallback;
+import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
+import org.springframework.cloud.loadbalancer.core.NoopServiceInstanceListSupplier;
+import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
-#### 技术栈
-- Spring Cloud: 2021.0.4
-- Spring Boot: 2.7.17
-- Spring-Cloud-Openfeign: 3.1.4(spring cloud依赖内置，不用指定版本)
-#### 效果
-可以看到服务有几个实例是上线，并且最终调用了那个实例
-
-![](https://files.mdnice.com/user/35072/f88a239c-366b-4ab0-9bc2-650366e3d1db.png)
-
-### 实现方案
-#### 1. 继承RoundRobinRule，并重写`choose`方法
-``` java
 @Slf4j
 public class CustomRoundRobinLoadBalancer implements ReactorServiceInstanceLoadBalancer {
     final AtomicInteger position;
@@ -65,37 +66,3 @@ public class CustomRoundRobinLoadBalancer implements ReactorServiceInstanceLoadB
         }
     }
 }
-
-```
-#### 2.修改LoadBalancerClients配置
-``` java
-@Configuration
-@LoadBalancerClients(defaultConfiguration = CustomLoadBalancerConfiguration.class)
-public class CustomLoadBalancerConfig {
-}
-
-@Configuration
-class CustomLoadBalancerConfiguration {
-    /**
-     * 参考默认实现
-     *
-     * @see org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientConfiguration#reactorServiceInstanceLoadBalancer
-     * @return
-     */
-    @Bean
-    public ReactorLoadBalancer<ServiceInstance> reactorServiceInstanceLoadBalancer(Environment environment, LoadBalancerClientFactory loadBalancerClientFactory) {
-        String name = environment.getProperty(LoadBalancerClientFactory.PROPERTY_NAME);
-        return new CustomRoundRobinLoadBalancer(loadBalancerClientFactory.getLazyProvider(name, ServiceInstanceListSupplier.class), name);
-    }
-}
-```
-
-以上两部完成大功告成！
-
-
-
-源码下载：https://github.com/dongweizhao/spring-cloud-example/tree/EurekaOpenFeign
-
-## 欢迎关注我的公众号
-有更多内容带给您
-![img_1.png](img_1.png)
