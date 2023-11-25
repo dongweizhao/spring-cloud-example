@@ -97,12 +97,12 @@ import org.springframework.context.annotation.Configuration;
 @RibbonClients(defaultConfiguration = {FeignRule.class})
 public class FeignConfig {
 }
-```
+```
 
 以上两部完成大功告成！
 
 源码下载：
-
+https://github.com/dongweizhao/spring-cloud-example/tree/SR6-OpenFeign
 
 ## 欢迎关注我的公众号
 有更多内容带给您
