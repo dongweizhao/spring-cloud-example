@@ -14,7 +14,7 @@ Spring Cloud 线上微服务实例都是2个起步，如果出问题后，在没
 ![](https://files.mdnice.com/user/35072/f88a239c-366b-4ab0-9bc2-650366e3d1db.png)
 
 ### 实现方案
-#### 1. 继承RoundRobinRule，并重写`choose`方法
+#### 1. 继承ReactorServiceInstanceLoadBalancer，并重写相关方法
 ``` java
 @Slf4j
 public class CustomRoundRobinLoadBalancer implements ReactorServiceInstanceLoadBalancer {
@@ -67,6 +67,7 @@ public class CustomRoundRobinLoadBalancer implements ReactorServiceInstanceLoadB
 }
 
 ```
+
 #### 2.修改LoadBalancerClients配置
 ``` java
 @Configuration
